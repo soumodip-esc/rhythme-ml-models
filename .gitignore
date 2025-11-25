@@ -3,6 +3,16 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#My files
+# Ignore Jupyter checkpoint folders
+.ipynb_checkpoints/
+
+# Ignore model pickle files
+# habit_model.pkl
+
+myenv/
+
+
 # C extensions
 *.so
 
@@ -179,3 +189,4 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
