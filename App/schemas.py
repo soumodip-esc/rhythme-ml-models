@@ -19,8 +19,8 @@ class HabitInput(BaseModel):
                 "day_of_week": 1,
                 "is_weekend": 0,
                 "current_streak": 10,
-                "completion_ratio_7d": 0.71,
-                "completion_ratio_30d": 0.65,
+                "completion_rate_7d": 0.71,
+                "completion_rate_30d": 0.65,
                 "days_since_start": 50,
                 "frequency_encoded": 0,
             }
