@@ -32,7 +32,7 @@ def home():
         "health":"/health"
     }
     
-@app.get("/health")
+@app.get("/o1/health")
 def health_check():
     return {
         "status" : "healthy" if predictor.model is not None else "Unhealthy",
@@ -40,7 +40,7 @@ def health_check():
         "api_version" : APP_VERSION
     }
     
-@app.post("/predict", response_model = PredictionResponse)
+@app.post("/o1/predict", response_model = PredictionResponse)
 def predict_habit(data : HabitInput):
     try:
         input_dict = data.model_dump()
