@@ -11,13 +11,13 @@ pip install -r requirements.txt
 
 ### 2. Run API
 ```bash
-uvicorn app.main:app --reload
+uvicorn App.main:app --reload
 ```
 
 ### 3. Access API
 - **API Root**: http://localhost:8000
 - **Interactive Docs**: http://localhost:8000/docs
-- **Health Check**: http://localhost:8000/health
+- **Health Check**: http://localhost:8000/o1/health
 
 ## 📡 Endpoints
 
