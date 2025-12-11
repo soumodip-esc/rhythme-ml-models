@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from App.config import APP_TITLE, APP_VERSION, APP_DESCRIPTION
 from App.model import predictor
 from App.schemas import HabitInput, PredictionResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 # import uvicorn
 # import pickle
@@ -22,6 +23,19 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://rythme-gamma.vercel.app",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],      # Important: allows OPTIONS so no 405 on preflight
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def home():
@@ -29,7 +43,7 @@ def home():
         "message" : "Habit Prediction Model 1",
         "version": APP_VERSION,
         "docs":"/docs",
-        "health":"/health"
+        "health":"/o1/health"
     }
     
 @app.get("/o1/health")
