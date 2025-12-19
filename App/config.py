@@ -1,9 +1,15 @@
 from pathlib import Path
+import os
+from dotenf import load_env
+
+
+load_env()
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-# MODEL_PATH = BASE_DIR / "models" / "model_1" / "modelname.pkl"
 MODEL_PATH = BASE_DIR / "Models" / "Model_1" / "habit_model.pkl"
-
+HF_TOKEN = os.getenv("HF_TOKEN")
+HF_MODEL = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 
 
 APP_TITLE = "Habit Completion Prediction API"
@@ -15,6 +21,14 @@ Features:
 - Returns probability and prediction
 - Model accuracy: 60.0%"""
 
+
+#Sentiment Setting 
+CONFIDENCE_THRESHOLS = 0.70
+ROBERTA_RETRIES = 3
+RETRY_DELAY = 2
+
+if not HF_TOKEN:
+    raise RuntimeError("HF_TOKEN nor fount in .env file")
 
 FEATURE_NAMES =[
     'day_of_week',

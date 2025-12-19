@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import List, Optional
 
 class HabitInput(BaseModel):
     """Input data for prediction"""
@@ -34,3 +34,23 @@ class PredictionResponse(BaseModel):
     probability: float
     probability_percent: str
     message: str
+
+
+class JournalInput(BaseModel):
+    text : str
+    title : Optional[str] = None
+
+class SentimentResult(BaseModel):
+    sentiment : str
+    confidence : float
+    model_used : str
+    emotions : List[str]
+
+class JournalResponse(BaseModel):
+    text : str
+    title : str
+    sentiment : str
+    confidance : float
+    emotions : List[str]
+    model_used : str
+    created_at   : str
