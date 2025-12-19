@@ -26,7 +26,7 @@ app = FastAPI(
 origins = [
     "http://localhost:3000",
     "http://localhost:3001",
-    "https://rythme-gamma.vercel.app",
+    "https://rhythme-gamma.vercel.app",
     "https://rhythme-git-dev-oopsvincent-projects.vercel.app"
 ]
 
