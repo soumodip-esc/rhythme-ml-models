@@ -1,6 +1,6 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from huggingface_hub import InferenceClient
-from config import HF_TOKEN, HF_MODEL, CONFIDENCE_THRESHOLS, ROBERTA_RETRIES, RETRY_DELAY
+from App.config import HF_TOKEN, HF_MODEL, CONFIDENCE_THRESHOLS, ROBERTA_RETRIES, RETRY_DELAY
 import time
 
 LABEL_MAP = {
@@ -71,7 +71,7 @@ def analyze(text: str):
 
     if rob_conf == "error":
          return {
-            "sentimet" : vader_label,
+            "sentiment" : vader_label,
             "confidence" : vader_conf,
             "model_used" : "vader-fallback",
             "emotions" : get_emotions(text, vader_label)
@@ -79,7 +79,7 @@ def analyze(text: str):
     
 
     return {
-            "sentimet" : rob_conf,
+            "sentiment" : rob_label,
             "confidence" : rob_conf,
             "model_used" : "roberta",
             "emotions" : get_emotions(text, vader_label)
@@ -97,7 +97,7 @@ def get_emotions(text: str, sentiment: str):
                 "pleased", "thrilled", "glad"
             ],
             "grateful": [
-                "grateful", "thankful", "appreciative", "blessed"
+                "grateful", "thankful", "appreciative", "blessed", "great"
             ],
             "productive": [
                 "productive", "accomplished", "achieved",

@@ -1,9 +1,9 @@
 from pathlib import Path
 import os
-from dotenf import load_env
+from dotenv import load_dotenv
+from App.__init__ import __version__
 
-
-load_env()
+load_dotenv()
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,7 +13,7 @@ HF_MODEL = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 
 
 APP_TITLE = "Habit Completion Prediction API"
-APP_VERSION = "0.1.0"
+APP_VERSION = __version__
 APP_DESCRIPTION = """ Predict whether a user will complete their habit based on historical data.
 
 Features:

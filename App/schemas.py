@@ -50,7 +50,7 @@ class JournalResponse(BaseModel):
     text : str
     title : str
     sentiment : str
-    confidance : float
+    confidence : float
     emotions : List[str]
     model_used : str
     created_at   : str
