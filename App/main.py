@@ -43,7 +43,9 @@ def home():
         "message" : "Rhythme Models 1",
         "version": APP_VERSION,
         "docs":"/docs",
-        "health":"/o1/health"
+        "health":"/o1/health",
+        "journal" :"/o1/journal",
+        "analyze":"/o1/analyze"
     }
     
 @app.get("/o1/health")
@@ -80,15 +82,15 @@ def analyze_text(data = JournalInput):
     )
 
 @app.post("/o1/journal",response_model=JournalResponse)
-def create_journal(data = JournalInput):
-    if not data or not data.strip():
+def create_journal(data : JournalInput):
+    if not data.text or not data.text.strip():
         raise  HTTPException(400, "Text can not be empty")
     
-    result = sentiment.analyze(data)
+    result = sentiment.analyze(data.text)
 
     return JournalResponse(
-        text=data,
-        title="Untitled", 
+        text=data.text,
+        title=data.title or "Untitled", 
         sentiment=result["sentiment"],
         confidence=result["confidence"],
         emotions=result["emotions"],

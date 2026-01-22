@@ -56,36 +56,33 @@ def roberta_sentiment(text:str):
     
 def analyze(text: str):
     vader_label, vader_conf = vader_sentiment(text)
-    print(f"Vader -> {vader_label},{vader_conf:.2f}")\
-
+    print(f"Vader -> {vader_label},{vader_conf:.2f}")
+    
     if vader_conf >= CONFIDENCE_THRESHOLS:
         return {
-            "sentimet" : vader_label,
-            "confidence" : vader_conf,
-            "model_used" : "vader",
-            "emotions" : get_emotions(text, vader_label)
+            "sentiment": vader_label,  # ← Fixed typo
+            "confidence": vader_conf,
+            "model_used": "vader",
+            "emotions": get_emotions(text, vader_label)
         }
     
     print(f"VADER uncertain -> Calling RoBERTa API...")
     rob_label, rob_conf = roberta_sentiment(text)
-
-    if rob_conf == "error":
+    
+    if rob_label == "error":  # ← Fixed: check label not conf
          return {
-            "sentiment" : vader_label,
-            "confidence" : vader_conf,
-            "model_used" : "vader-fallback",
-            "emotions" : get_emotions(text, vader_label)
+            "sentiment": vader_label,
+            "confidence": vader_conf,
+            "model_used": "vader-fallback",
+            "emotions": get_emotions(text, vader_label)
         }
     
-
     return {
-            "sentiment" : rob_label,
-            "confidence" : rob_conf,
-            "model_used" : "roberta",
-            "emotions" : get_emotions(text, vader_label)
-        }
-    
-
+        "sentiment": rob_label,
+        "confidence": rob_conf,
+        "model_used": "roberta",
+        "emotions": get_emotions(text, rob_label)
+    }
 def get_emotions(text: str, sentiment: str):
     text_lower = text.lower()
     emotions = []
