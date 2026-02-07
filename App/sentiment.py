@@ -2,6 +2,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from huggingface_hub import InferenceClient
 from App.config import HF_TOKEN, HF_MODEL, CONFIDENCE_THRESHOLS, ROBERTA_RETRIES, RETRY_DELAY
 import time
+import re
 
 LABEL_MAP = {
     "LABEL_0": "negative",
@@ -83,54 +84,70 @@ def analyze(text: str):
         "model_used": "roberta",
         "emotions": get_emotions(text, rob_label)
     }
+
 def get_emotions(text: str, sentiment: str):
     text_lower = text.lower()
     emotions = []
 
+    # Tokenize text into proper words (avoids partial matching issues)
+    words = set(re.findall(r'\b\w+\b', text_lower))
+
     emotion_keywords = {
+
         "positive": {
-            "joyful": [
-                "happy", "joy", "excited", "cheerful", "delighted",
-                "pleased", "thrilled", "glad"
+
+            "happy": [
+                "happy", "joy", "joyful", "cheerful", "glad",
+                "delighted", "content", "pleased", "smiling",
+                "bliss", "great", "awesome", "good"
             ],
-            "grateful": [
-                "grateful", "thankful", "appreciative", "blessed", "great"
+
+            "calm": [
+                "calm", "relaxed", "peaceful", "comfortable",
+                "chill", "serene", "balanced", "stable",
+                "quiet", "easy"
             ],
-            "productive": [
-                "productive", "accomplished", "achieved",
-                "completed", "finished", "successful"
-            ],
-            "confident": [
-                "confident", "strong", "motivated", "determined",
-                "focused", "energized"
+
+            "excited": [
+                "excited", "thrilled", "pumped", "enthusiastic",
+                "eager", "hyped", "ecstatic", "overjoyed",
+                "energetic"
             ]
         },
 
         "negative": {
+
             "sad": [
                 "sad", "unhappy", "down", "depressed",
-                "low", "heartbroken"
+                "low", "heartbroken", "lonely",
+                "miserable", "hopeless", "crying"
             ],
-            "anxious": [
-                "anxious", "worried", "stress", "stressed",
-                "nervous", "tense", "overthinking"
-            ],
+
             "frustrated": [
-                "angry", "frustrated", "irritated",
-                "annoyed", "fed up"
+                "frustrated", "angry", "irritated",
+                "annoyed", "fed up", "mad",
+                "resentful", "upset"
             ],
-            "tired": [
-                "tired", "exhausted", "burnt out",
-                "drained", "fatigued"
+
+            "anxious": [
+                "anxious", "worried", "stress",
+                "stressed", "nervous", "tense",
+                "panic", "afraid", "overthinking",
+                "restless"
             ]
         }
     }
 
+    # If sentiment is not positive or negative
     if sentiment not in emotion_keywords:
         return ["neutral"]
 
-    for emotion, words in emotion_keywords[sentiment].items():
-        if any(word in text_lower for word in words):
-            emotions.append(emotion)
+    # Check emotions
+    for emotion, keyword_list in emotion_keywords[sentiment].items():
+        for keyword in keyword_list:
+            if keyword in words:
+                emotions.append(emotion)
+                break  # stop checking once matched
 
     return emotions if emotions else ["neutral"]
+
