@@ -26,14 +26,14 @@ origins = [
     "http://localhost:3000",
     "http://localhost:3001",
     "https://rhythme-gamma.vercel.app",
-    "https://rhythme-git-dev-oopsvincent-projects.vercel.app"
+    "https://*-oopsvincent-projects.vercel.app",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],     
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
