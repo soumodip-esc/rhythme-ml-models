@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from App.config import APP_TITLE, APP_VERSION, APP_DESCRIPTION
 from App.model import predictor
 from App.schemas import HabitInput, PredictionResponse, JournalInput, JournalResponse, SentimentResult
+from App.dependencies import verify_api_secret
 from . import sentiment
 from datetime import datetime
 
@@ -58,7 +59,7 @@ def health_check():
         "roberta": "huggingface_api"
     }
     
-@app.post("/o1/predict", response_model=PredictionResponse)
+@app.post("/o1/predict", response_model=PredictionResponse, dependencies=[Depends(verify_api_secret)])
 def predict_habit(data : HabitInput):
     try:
         input_dict = data.model_dump()
@@ -67,7 +68,7 @@ def predict_habit(data : HabitInput):
     except Exception as e:
         raise HTTPException(status_code = 500 , detail = str(e))
 
-@app.post("/o1/analyze", response_model=SentimentResult)
+@app.post("/o1/analyze", response_model=SentimentResult, dependencies=[Depends(verify_api_secret)])
 def analyze_text(data = JournalInput):
     if not data or not data.strip():
         raise  HTTPException(400, "Text can not be empty")
@@ -81,7 +82,7 @@ def analyze_text(data = JournalInput):
         emotions=result["emotions"]
     )
 
-@app.post("/o1/journal",response_model=JournalResponse)
+@app.post("/o1/journal",response_model=JournalResponse, dependencies=[Depends(verify_api_secret)])
 def create_journal(data : JournalInput):
     if not data.text or not data.text.strip():
         raise  HTTPException(400, "Text can not be empty")

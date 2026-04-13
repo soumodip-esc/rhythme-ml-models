@@ -6,6 +6,9 @@ from App.__init__ import __version__
 load_dotenv()
 
 
+API_SECRET = os.environ.get("API_SECRET")
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_PATH = BASE_DIR / "Models" / "Model_1" / "habit_model.pkl"
 HF_TOKEN = os.getenv("HF_TOKEN")
@@ -41,3 +44,5 @@ FEATURE_NAMES =[
     'days_since_start',
     'frequency_encoded'
 ]
+
+
