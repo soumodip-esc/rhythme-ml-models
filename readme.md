@@ -501,13 +501,13 @@ uvicorn App.main:app --reload
 - ✅ **Interactive Docs** — Auto-generated Swagger UI at `/docs`
 - ✅ **Production Ready** — Error handling, logging, retries
 
----
+<!-- ---
 
 ## 📄 License
 
 MIT License
 
----
+--- -->
 
 ## 👥 Support
 
