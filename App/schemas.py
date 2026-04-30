@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+
+#Habit Model Input
 class HabitInput(BaseModel):
     """Input data for prediction"""
 
@@ -27,6 +29,7 @@ class HabitInput(BaseModel):
         }
 
 
+#Habit Model Prediction Output
 class PredictionResponse(BaseModel):
     """Response for Prediction"""
 
@@ -36,16 +39,21 @@ class PredictionResponse(BaseModel):
     message: str
 
 
+#Journal Input
 class JournalInput(BaseModel):
     text : str
     title : Optional[str] = None
 
+
+#Sentiment Output
 class SentimentResult(BaseModel):
     sentiment : str
     confidence : float
     model_used : str
     emotions : List[str]
 
+
+#Journal Output
 class JournalResponse(BaseModel):
     text : str
     title : str
@@ -56,13 +64,15 @@ class JournalResponse(BaseModel):
     created_at   : str
 
 
+#One Day Sentiment
 class DaySentiment(BaseModel):
     sentiment: str          
     confidence: float       # 0.0 to 1.0
     model_used: Optional[str] = None
     emotions: Optional[dict] = None
  
- 
+
+#Daily Log of Users all info 
 class DailyLog(BaseModel):
     date: Optional[str] = None                  
     journaled: int                              # 0 or 1
@@ -71,12 +81,39 @@ class DailyLog(BaseModel):
     focus_mins: int
     sentiment: Optional[DaySentiment] = None   # only on days user journaled
  
- 
+#Creating all logs of min 14days
 class WeeklyInsightRequest(BaseModel):
     logs: List[DailyLog]
  
- 
+#Insight Information Output
 class WeeklyInsightResponse(BaseModel):
     insights: List[str]
     days_analyzed: int
     message: Optional[str] = None
+
+
+#Goal Generation Input
+class GoalGenerateRequest(BaseModel):
+    goal_title: str
+    goal_description: str = ""  # optional, defaults to empty string
+
+#Output Task
+class GeneratedTask(BaseModel):
+    title: str
+    description: str
+    type: str  # always "starter"
+
+
+#Output Habit
+class GeneratedHabit(BaseModel):
+    title: str
+    frequency: str
+    reason: str
+
+
+#Goal response
+class GoalGenerateResponse(BaseModel):
+    tasks: List[GeneratedTask]
+    habits: List[GeneratedHabit]
+    generated: bool
+    fallback_used: bool

@@ -8,9 +8,15 @@ load_dotenv()
 #App Secret Key 
 API_SECRET = os.environ.get("API_SECRET")
 
-APP_TITLE = "Habit Completion Prediction API"
+APP_TITLE = ""
 APP_VERSION = __version__
-APP_DESCRIPTION = """ Predict whether a user will complete their habit based on historical data.
+APP_DESCRIPTION = """ Core ML API powering the Rhythmé app.
+
+Endpoints:
+- Habit completion prediction (scikit-learn)
+- Hybrid sentiment analysis (VADER + RoBERTa)
+- Behavioral pattern insights (14-day minimum log, template-based)
+- Goal structuring via Groq LLM
 
 Features:
 - 7 input features
@@ -47,3 +53,12 @@ RETRY_DELAY = 2
 #Behavioral Pattern Minimum Cnfiguration 
 MIN_DAYS = 14
 THRESHOLD = 0.35
+
+# Groq Configuration
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_TEMPERATURE = 0.3
+GROQ_MAX_TOKENS = 1000
+
+if not GROQ_API_KEY:
+    raise RuntimeError("GROQ_API_KEY not found in .env file")

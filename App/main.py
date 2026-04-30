@@ -6,9 +6,11 @@ from App.model import predictor
 from App.schemas import (
     HabitInput, PredictionResponse,
     JournalInput, JournalResponse, SentimentResult,
-    WeeklyInsightRequest, WeeklyInsightResponse
+    WeeklyInsightRequest, WeeklyInsightResponse,
+    GoalGenerateRequest, GoalGenerateResponse
 )
 from App.insight_engine import generate_insights
+from App.goals_engine import generate_goal_plan
 from App.dependencies import verify_api_secret
 from . import sentiment
 from datetime import datetime
@@ -58,7 +60,7 @@ def home():
         "insights": "/o1/insights_weekly"
     }
     
-@app.get("/o1/health")
+@app.get("/v1/health")
 def health_check():
     return {
         "status" : "healthy" if predictor.model is not None else "Unhealthy",
@@ -68,7 +70,7 @@ def health_check():
         "roberta": "huggingface_api"
     }
     
-@app.post("/o1/predict", response_model=PredictionResponse, dependencies=[Depends(verify_api_secret)])
+@app.post("/v1/predict", response_model=PredictionResponse, dependencies=[Depends(verify_api_secret)])
 def predict_habit(data : HabitInput):
     try:
         input_dict = data.model_dump()
@@ -77,7 +79,7 @@ def predict_habit(data : HabitInput):
     except Exception as e:
         raise HTTPException(status_code = 500 , detail = str(e))
 
-@app.post("/o1/analyze", response_model=SentimentResult, dependencies=[Depends(verify_api_secret)])
+@app.post("/v1/analyze", response_model=SentimentResult, dependencies=[Depends(verify_api_secret)])
 def analyze_text(data = JournalInput):
     if not data or not data.strip():
         raise  HTTPException(400, "Text can not be empty")
@@ -91,7 +93,7 @@ def analyze_text(data = JournalInput):
         emotions=result["emotions"]
     )
 
-@app.post("/o1/journal",response_model=JournalResponse, dependencies=[Depends(verify_api_secret)])
+@app.post("/v1/journal",response_model=JournalResponse, dependencies=[Depends(verify_api_secret)])
 def create_journal(data : JournalInput):
     if not data.text or not data.text.strip():
         raise  HTTPException(400, "Text can not be empty")
@@ -108,7 +110,7 @@ def create_journal(data : JournalInput):
         created_at=datetime.now().isoformat()
     )
 
-@app.post("/o1/insights_weekly", response_model=WeeklyInsightResponse, dependencies=[Depends(verify_api_secret)])
+@app.post("/v1/insights_weekly", response_model=WeeklyInsightResponse, dependencies=[Depends(verify_api_secret)])
 def weekly_insights(data: WeeklyInsightRequest):
     if not data.logs:
         raise HTTPException(status_code=400, detail="No logs provided.")
@@ -120,3 +122,7 @@ def weekly_insights(data: WeeklyInsightRequest):
         message=result["message"]
     )
  
+@app.post("/api/v1/goals/generate", dependencies=[Depends(verify_api_secret)])
+def generate_goal(request: GoalGenerateRequest) -> GoalGenerateResponse:
+    result = generate_goal_plan(request.goal_title, request.goal_description)
+    return result
